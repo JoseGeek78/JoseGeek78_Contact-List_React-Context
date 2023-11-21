@@ -30,7 +30,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					redirect: 'follow'
 				  };
 				  
-				  fetch("https://playground.4geeks.com/apis/fake/contact/agenda/amv87", requestOptions)
+				  fetch("https://playground.4geeks.com/apis/fake/contact/agenda/JoseGeek78", requestOptions)
 					.then(response => response.json())
 					.then(data => setStore({ contacts: data }))
 					.catch(error => console.log('error', error));
