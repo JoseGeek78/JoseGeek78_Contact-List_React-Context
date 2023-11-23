@@ -1,16 +1,22 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
+
+	const navigate = useNavigate();
+
 	return (
 		<nav className="navbar navbar-light bg-light mb-3">
-			<Link to="/">
-				<span className="navbar-brand mb-0 h1">React Boilerplate</span>
-			</Link>
+			<h1 className="mt-2">Agenda</h1>
+			<Link to="/"></Link>
 			<div className="ml-auto">
-				<Link to="/demo">
-					<button className="btn btn-primary">Check the Context in action</button>
-				</Link>
+				<button
+					onClick={() => navigate("/new-contact")}
+					className="btn btn-success"
+				>
+					Add new contact
+				</button>
+
 			</div>
 		</nav>
 	);
