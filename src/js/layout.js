@@ -4,7 +4,7 @@ import ScrollToTop from "./component/scrollToTop";
 
 import { Home } from "./views/home";;
 import injectContext from "./store/appContext";
-import { NewContact } from "./views/NewContact";
+import { NewContact } from "./views/Newcontact";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";

@@ -36,10 +36,10 @@ export const NewContact = () => {
           );
         })}
         <button type="submit" className="btn btn-primary mt-3">
-          Submit
+          Add
         </button>
       </form>
-      <Link to="/" className="btn btn-primary mt-3">Go back</Link>
+      <Link to="/" className="btn btn-primary mt-3">Check Agenda</Link>
     </div>
   );
 };
