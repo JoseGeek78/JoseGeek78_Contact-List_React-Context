@@ -1,71 +1,97 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			],
-			contacts: []
+			contacts: [],
+			newContact: {
+				email: "",
+				full_name: "",
+				address: "",
+				phone: "",
+			},
+			isNew: true,
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-				const store = getStore();
-				var requestOptions = {
-					method: 'GET',
-					redirect: 'follow'
-				  };
-				  
-				  fetch("https://playground.4geeks.com/apis/fake/contact/agenda/JoseGeek78", requestOptions)
-					.then(response => response.json())
-					.then(data => setStore({ contacts: data }))
-					.catch(error => console.log('error', error));
-			},
-			deleteContact: (indexToDelete) => {
-				//get the store
-				const store = getStore();
+			fetchContacts: () => {
+				const baseUrl = "https://playground.4geeks.com/apis/fake/contact";
+				const getContactsUrl = `${baseUrl}/agenda/JoseGeek78`;
 
-				var requestOptions = {
-					method: 'DELETE',
-					redirect: 'follow'
-				  };
-				  
-				  fetch("https://playground.4geeks.com/apis/fake/contact/" + indexToDelete, requestOptions)
-					.then(response => response.json())
-					.then(data => setStore({ contacts: data }))
-					.catch(error => console.log('error', error));
-					
-				  
+				fetch(getContactsUrl)
+					.then((response) => response.json())
+					.then((data) => setStore({ contacts: data }));
 			},
-			changeColor: (index, color) => {
-				//get the store
+			addNewContact: async () => {
 				const store = getStore();
+				const newContact = store.newContact;
+				const baseUrl = "https://playground.4geeks.com/apis/fake/contact";
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
+				const body = JSON.stringify({
+					...newContact,
+					agenda_slug: "JoseGeek78",
 				});
 
-				//reset the global store
-				setStore({ demo: demo });
-			}
-		}
+				await fetch(baseUrl, {
+					method: "POST",
+					body: body,
+					headers: {
+						"Content-Type": "application/json",
+					},
+				
+
+
+				});
+				
+
+				setStore({
+					newContact: {
+						email: "",
+						full_name: "",
+						address: "",
+						phone: "",
+					},
+				});
+			},
+			updateContact: async () => {
+				const store = getStore();
+				const contactToUpdate = store.newContact;
+				const baseUrl = "https://playground.4geeks.com/apis/fake/contact/";
+				const updateUrl = `${baseUrl}${contactToUpdate.id}`;
+
+				const body = JSON.stringify(contactToUpdate);
+
+				await fetch(updateUrl, {
+					method: "PUT",
+					body: body,
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
+			},
+
+			handleNewContactChange: (key, value) => {
+				const store = getStore();
+				const prevContact = store.newContact;
+
+				setStore({ newContact: { ...prevContact, [key]: value } });
+			},
+			setContactForUpdate: (selectedContact) => {
+				setStore({
+					newContact: selectedContact,
+					isNew: false,
+				});
+			},
+			deleteContact: async (id) => {
+				const baseUrl = "https://playground.4geeks.com/apis/fake/contact/";
+				const deleteUrl = `${baseUrl}${id}`;
+				const contacts = getStore().contacts;
+
+				const filteredContacts = contacts.filter(
+					(contact) => contact.id !== id
+				);
+
+				await fetch(deleteUrl, { method: "DELETE" });
+				setStore({ contacts: filteredContacts });
+			},
+		},
 	};
 };
 
